@@ -1,0 +1,8 @@
+CREATE TABLE IF NOT EXISTS links (
+  code TEXT PRIMARY KEY,
+  url TEXT NOT NULL,
+  created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+  updated_at DATETIME
+);
+
+CREATE INDEX IF NOT EXISTS idx_links_code ON links(code);
