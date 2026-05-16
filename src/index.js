@@ -18,7 +18,7 @@ export default {
     if (path.startsWith('/api/')) {
       // Authorization Check
       const authHeader = request.headers.get('Authorization');
-      console.log(authHeader, env.PASSKEY_AUTH)
+
       if (!authHeader || authHeader !== `Bearer ${env.PASSKEY_AUTH}`) {
         return new Response(JSON.stringify({ message: 'Unauthorized' }), {
           status: 401,
@@ -26,26 +26,36 @@ export default {
         });
       }
 
+      // Create
       if (path === '/api/link' && request.method === 'POST') {
         return handleCreate(request, env);
       }
 
+      // Update
       if (path.startsWith('/api/link/') && request.method === 'PUT') {
         const code = path.split('/').pop();
         return handleUpdate(request, env, ctx, code);
       }
 
+      // Delete
       if (path.startsWith('/api/link/') && request.method === 'DELETE') {
         const code = path.split('/').pop();
         return handleDelete(request, env, ctx, code);
       }
 
+      // List all links
       if (path === '/api/links' && request.method === 'GET') {
         return handleList(request, env);
       }
     }
 
-    return new Response('Not Found', { status: 404 });
+    return new Response(JSON.stringify({ message: "Not Found" }), {
+      status: 404,
+      headers: {
+        'Content-Type': 'application/json',
+        'Cache-Control': 'public, max-age=60' // 60 seconds cache
+      },
+    });
   },
 };
 

@@ -88,7 +88,9 @@ describe("Shortlink Worker", () => {
           url: "https://bing.com"
         })
       });
-      const response = await worker.fetch(request, env, createExecutionContext());
+      const ctx = createExecutionContext();
+      const response = await worker.fetch(request, env, ctx);
+      await waitOnExecutionContext(ctx);
       const data = await response.json();
       
       expect(response.status).toBe(200);
@@ -100,7 +102,9 @@ describe("Shortlink Worker", () => {
         method: "DELETE",
         headers: { "Authorization": `Bearer ${PASSKEY}` }
       });
-      const response = await worker.fetch(request, env, createExecutionContext());
+      const ctx = createExecutionContext();
+      const response = await worker.fetch(request, env, ctx);
+      await waitOnExecutionContext(ctx);
       expect(response.status).toBe(200);
     });
   });
